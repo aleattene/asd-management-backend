@@ -159,6 +159,7 @@ cython_debug/
 
 # Claude Code (local user settings only — project settings.json can be committed)
 .claude/settings.local.json
+CLAUDE.md
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
