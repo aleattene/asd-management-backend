@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.test import TestCase
 
 from staff.models import Trainer, SportDoctor
@@ -21,7 +22,7 @@ class TrainerModelTests(TestCase):
         self.assertIn("Trainer(", repr(self.trainer))
 
     def test_fiscal_code_unique(self) -> None:
-        with self.assertRaises(Exception):
+        with self.assertRaises(IntegrityError):
             Trainer.objects.create(
                 first_name="Clone",
                 last_name="Clone",
@@ -64,7 +65,7 @@ class SportDoctorModelTests(TestCase):
         self.assertIn("SportDoctor(", repr(self.doctor))
 
     def test_vat_number_unique(self) -> None:
-        with self.assertRaises(Exception):
+        with self.assertRaises(IntegrityError):
             SportDoctor.objects.create(
                 first_name="Clone",
                 last_name="Clone",

@@ -10,7 +10,7 @@ from .serializers import TrainerSerializer, SportDoctorSerializer
 class TrainerViewSet(viewsets.ModelViewSet):
     """CRUD API for trainers."""
 
-    queryset = Trainer.objects.select_related("user").all()
+    queryset = Trainer.objects.select_related("user").filter(is_active=True)
     serializer_class = TrainerSerializer
     permission_classes: list = [IsAdminOrOperator]
 
@@ -25,7 +25,7 @@ class TrainerViewSet(viewsets.ModelViewSet):
 class SportDoctorViewSet(viewsets.ModelViewSet):
     """CRUD API for sport doctors."""
 
-    queryset = SportDoctor.objects.all()
+    queryset = SportDoctor.objects.filter(is_active=True)
     serializer_class = SportDoctorSerializer
     permission_classes: list = [IsAdminOrOperator]
 

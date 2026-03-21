@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.test import TestCase
 
 from athletes.models import Athlete, Category
@@ -22,7 +23,7 @@ class CategoryModelTests(TestCase):
         self.assertEqual(repr(self.category), "Category(code='U14', description='Under 14')")
 
     def test_code_unique(self) -> None:
-        with self.assertRaises(Exception):
+        with self.assertRaises(IntegrityError):
             Category.objects.create(code="U14", description="Duplicato")
 
     def test_is_active_default_true(self) -> None:
@@ -73,7 +74,7 @@ class AthleteModelTests(TestCase):
         self.assertIn(self.athlete, self.trainer.athletes.all())
 
     def test_fiscal_code_unique(self) -> None:
-        with self.assertRaises(Exception):
+        with self.assertRaises(IntegrityError):
             Athlete.objects.create(
                 guardian=self.guardian,
                 first_name="Clone",

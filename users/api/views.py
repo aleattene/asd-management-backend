@@ -22,7 +22,7 @@ class UserViewSet(viewsets.ModelViewSet):
     - me: any authenticated user can view/update their own profile
     """
 
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.filter(is_active=True)
     permission_classes: list = [IsAdminOrOperator]
 
     def get_serializer_class(self):

@@ -6,7 +6,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns: list = [
-    # Django Admin (superadmin only)
+    # Django Admin (requires is_staff=True)
     path("admin/", admin.site.urls),
     # JWT Authentication
     path("api/v1/auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
