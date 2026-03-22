@@ -30,6 +30,15 @@ class IsTrainer(permissions.BasePermission):
         return request.user.role == "trainer"
 
 
+class IsSuperAdmin(permissions.BasePermission):
+    """Allows access only to users with superadmin role."""
+
+    def has_permission(self, request: Request, view: APIView) -> bool:
+        if not request.user or not request.user.is_authenticated:
+            return False
+        return request.user.role == "superadmin"
+
+
 class IsAdminOrOperatorOrReadOnly(permissions.BasePermission):
     """Allows read-only access to any authenticated user, write access to admin/operator/superadmin."""
 

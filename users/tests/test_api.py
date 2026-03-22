@@ -169,3 +169,70 @@ class UserCRUDTests(TestCase):
         response = self.client.get(f"/api/v1/users/{self.member.pk}/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["username"], "member")
+
+
+class UserRoleChangeTests(TestCase):
+    """Tests for PATCH /api/v1/users/{id}/set_role/ endpoint."""
+
+    def setUp(self) -> None:
+        self.client: APIClient = APIClient()
+        self.superadmin: CustomUser = CustomUser.objects.create_user(
+            username="superadmin",
+            email="superadmin@example.com",
+            password="superpass123",
+            role=UserRole.SUPERADMIN,
+        )
+        self.admin: CustomUser = CustomUser.objects.create_user(
+            username="admin",
+            email="admin@example.com",
+            password="adminpass123",
+            role=UserRole.ADMIN,
+        )
+        self.member: CustomUser = CustomUser.objects.create_user(
+            username="member",
+            email="member@example.com",
+            password="memberpass123",
+            role=UserRole.MEMBER,
+        )
+
+    def test_superadmin_can_change_role(self) -> None:
+        self.client.force_authenticate(user=self.superadmin)
+        response = self.client.patch(
+            f"/api/v1/users/{self.member.pk}/set_role/",
+            {"role": "trainer"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["role"], "trainer")
+        self.member.refresh_from_db()
+        self.assertEqual(self.member.role, "trainer")
+
+    def test_admin_cannot_change_role(self) -> None:
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.patch(
+            f"/api/v1/users/{self.member.pk}/set_role/",
+            {"role": "operator"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_member_cannot_change_role(self) -> None:
+        self.client.force_authenticate(user=self.member)
+        response = self.client.patch(
+            f"/api/v1/users/{self.member.pk}/set_role/",
+            {"role": "admin"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_unauthenticated_cannot_change_role(self) -> None:
+        response = self.client.patch(
+            f"/api/v1/users/{self.member.pk}/set_role/",
+            {"role": "admin"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_invalid_role_returns_400(self) -> None:
+        self.client.force_authenticate(user=self.superadmin)
+        response = self.client.patch(
+            f"/api/v1/users/{self.member.pk}/set_role/",
+            {"role": "god"},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

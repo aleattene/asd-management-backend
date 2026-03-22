@@ -88,6 +88,15 @@ class UserCreateSerializer(_FiscalCodeNormalizeMixin, serializers.ModelSerialize
         )
 
 
+class UserRoleSerializer(serializers.ModelSerializer):
+    """Serializer for the superadmin-only role change endpoint."""
+
+    class Meta:
+        model = CustomUser
+        fields: list[str] = ["id", "username", "role"]
+        read_only_fields: list[str] = ["id", "username"]
+
+
 class UserMeSerializer(_FiscalCodeNormalizeMixin, serializers.ModelSerializer):
     """Serializer for the authenticated user's own profile."""
 
