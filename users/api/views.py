@@ -4,13 +4,14 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from config.permissions import IsAdminOrOperator
+from config.permissions import IsAdminOrOperator, IsSuperAdmin
 from users.models import CustomUser
 from .serializers import (
     UserListSerializer,
     UserDetailSerializer,
     UserCreateSerializer,
     UserMeSerializer,
+    UserRoleSerializer,
 )
 
 
@@ -32,6 +33,8 @@ class UserViewSet(viewsets.ModelViewSet):
             return UserListSerializer
         if self.action == "me":
             return UserMeSerializer
+        if self.action == "set_role":
+            return UserRoleSerializer
         return UserDetailSerializer
 
     def destroy(self, request: Request, *args, **kwargs) -> Response:
@@ -40,6 +43,15 @@ class UserViewSet(viewsets.ModelViewSet):
         user.is_active = False
         user.save(update_fields=["is_active"])
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["patch"], permission_classes=[IsSuperAdmin])
+    def set_role(self, request: Request, pk: int | None = None) -> Response:
+        """Change a user's role. Restricted to superadmin only."""
+        user: CustomUser = self.get_object()
+        serializer = UserRoleSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
     @action(detail=False, methods=["get", "patch"], permission_classes=[IsAuthenticated])
     def me(self, request: Request) -> Response:
