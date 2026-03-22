@@ -15,6 +15,7 @@ urlpatterns: list = [
     path("api/v1/", include("users.api.urls")),
     path("api/v1/", include("athletes.api.urls")),
     path("api/v1/", include("staff.api.urls")),
+    path("api/v1/", include("doctors.api.urls")),
     # OpenAPI schema
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/schema/swagger-ui/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
