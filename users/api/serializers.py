@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import CustomUser
+from users.models import CustomUser, UserRole
 
 
 class _FiscalCodeNormalizeMixin:
@@ -90,6 +90,8 @@ class UserCreateSerializer(_FiscalCodeNormalizeMixin, serializers.ModelSerialize
 
 class UserRoleSerializer(serializers.ModelSerializer):
     """Serializer for the superadmin-only role change endpoint."""
+
+    role = serializers.ChoiceField(choices=UserRole.choices, required=True)
 
     class Meta:
         model = CustomUser

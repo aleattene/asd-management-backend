@@ -48,7 +48,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def set_role(self, request: Request, pk: int | None = None) -> Response:
         """Change a user's role. Restricted to superadmin only."""
         user: CustomUser = self.get_object()
-        serializer = UserRoleSerializer(user, data=request.data, partial=True)
+        serializer = UserRoleSerializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

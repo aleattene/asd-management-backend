@@ -236,3 +236,11 @@ class UserRoleChangeTests(TestCase):
             {"role": "god"},
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_missing_role_returns_400(self) -> None:
+        self.client.force_authenticate(user=self.superadmin)
+        response = self.client.patch(
+            f"/api/v1/users/{self.member.pk}/set_role/",
+            {},
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
