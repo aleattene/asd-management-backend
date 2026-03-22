@@ -5,12 +5,12 @@
 ![Python](https://badgen.net/badge/Built%20with/Python/blue)
 ![Django](https://img.shields.io/badge/Built%20with-Django-092E20)
 ![Django Rest Framework](https://img.shields.io/badge/Built%20with-DRF-red)
-[![Tests](https://github.com/aleattene/asd-management-webapp-responsive-backend-django/actions/workflows/tests.yml/badge.svg)](https://github.com/aleattene/asd-management-webapp-responsive-backend-django/actions/workflows/tests.yml)
-[![codecov](https://codecov.io/gh/aleattene/asd-management-webapp-responsive-backend-django/graph/badge.svg?token=452QWRN2E6)](https://codecov.io/gh/aleattene/asd-management-webapp-responsive-backend-django)
-[![GitHub commits](https://badgen.net/github/commits/aleattene/asd-management-webapp-responsive-backend-django)](https://github.com/aleattene/asd-management-webapp-responsive-backend-django/commits/)
-[![GitHub last commit](https://img.shields.io/github/last-commit/aleattene/asd-management-webapp-responsive-backend-django)](https://github.com/aleattene/asd-management-webapp-responsive-backend-django/commits/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/aleattene/asd-management-webapp-responsive-backend-django/pulls)
-[![License](https://img.shields.io/github/license/aleattene/asd-management-webapp-responsive-backend-django?color=blue)](https://github.com/aleattene/asd-management-webapp-responsive-backend-django/blob/main/LICENSE)
+[![Tests](https://github.com/aleattene/asd-management-backend/actions/workflows/tests.yml/badge.svg)](https://github.com/aleattene/asd-management-backend/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/aleattene/asd-management-backend/graph/badge.svg?token=452QWRN2E6)](https://codecov.io/gh/aleattene/asd-management-backend)
+[![GitHub commits](https://badgen.net/github/commits/aleattene/asd-management-backend)](https://github.com/aleattene/asd-management-backend/commits/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/aleattene/asd-management-backend)](https://github.com/aleattene/asd-management-backend/commits/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/aleattene/asd-management-backend/pulls)
+[![License](https://img.shields.io/github/license/aleattene/asd-management-backend?color=blue)](https://github.com/aleattene/asd-management-backend/blob/main/LICENSE)
 
 *Work in Progress*
 
