@@ -1,19 +1,18 @@
 from rest_framework import serializers
 
-from staff.models import Trainer
+from doctors.models import SportDoctor
 
 
-class TrainerSerializer(serializers.ModelSerializer):
-    """Serializer for Trainer model."""
+class SportDoctorSerializer(serializers.ModelSerializer):
+    """Serializer for SportDoctor model."""
 
     class Meta:
-        model = Trainer
+        model = SportDoctor
         fields: list[str] = [
             "id",
-            "user",
             "first_name",
             "last_name",
-            "fiscal_code",
+            "vat_number",
             "is_active",
             "created_at",
             "updated_at",

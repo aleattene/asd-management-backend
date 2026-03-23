@@ -45,6 +45,9 @@ INSTALLED_APPS: list[str] = [
     "users",
     "athletes",
     "staff",
+    "doctors",
+    "enrollments",
+    "certificates",
 ]
 
 MIDDLEWARE: list[str] = [

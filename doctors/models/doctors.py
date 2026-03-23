@@ -2,7 +2,7 @@ from django.db import models
 
 
 class SportDoctor(models.Model):
-    """Model representing a sport doctor."""
+    """Model representing an external sport doctor who issues medical certificates."""
 
     first_name = models.CharField(max_length=100, verbose_name="Nome")
     last_name = models.CharField(max_length=100, verbose_name="Cognome")

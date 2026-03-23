@@ -132,10 +132,13 @@ http://localhost:8000/api/schema/
 | POST | `/api/v1/auth/token/refresh/` | Refresh access token |
 | GET/PATCH | `/api/v1/users/me/` | Own profile |
 | GET/POST | `/api/v1/users/` | List/create users (admin/operator) |
+| PATCH | `/api/v1/users/{id}/set_role/` | Change user role (superadmin only) |
 | GET/POST | `/api/v1/athletes/` | List/create athletes |
 | GET/POST | `/api/v1/categories/` | List/create categories |
 | GET/POST | `/api/v1/trainers/` | List/create trainers |
 | GET/POST | `/api/v1/doctors/` | List/create sport doctors |
+| GET/POST | `/api/v1/enrollments/` | List/create season enrollments |
+| GET/POST | `/api/v1/certificates/` | List/create sport medical certificates |
 
 ---
 
@@ -163,7 +166,10 @@ config/
     pagination.py       # Standard pagination
 users/                  # Custom user model with roles + JWT
 athletes/               # Athlete registry + categories
-staff/                  # Trainers + sport doctors
+staff/                  # Trainers (internal ASD staff)
+doctors/                # Sport doctors (external professionals)
+enrollments/            # Season enrollments
+certificates/           # Sport medical certificates
 docs/                   # Additional project documentation
 ```
 
