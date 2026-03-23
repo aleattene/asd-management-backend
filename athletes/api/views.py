@@ -36,7 +36,7 @@ class AthleteViewSet(viewsets.ModelViewSet):
         if getattr(self, "swagger_fake_view", False):
             return Athlete.objects.none()
         user = self.request.user
-        qs = Athlete.objects.select_related("category", "trainer", "guardian").filter(is_active=True)
+        qs = Athlete.objects.select_related("category", "trainer", "guardian", "nationality").filter(is_active=True)
         if user.role in ("admin", "superadmin", "operator"):
             return qs
         if user.role == "trainer":
