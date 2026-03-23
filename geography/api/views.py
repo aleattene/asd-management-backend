@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from config.permissions import IsAdminOrOperatorOrReadOnly
@@ -30,6 +31,6 @@ class MunicipalityViewSet(viewsets.ModelViewSet):
     queryset = Municipality.objects.select_related("province").all()
     serializer_class = MunicipalitySerializer
     permission_classes: list = [IsAdminOrOperatorOrReadOnly]
-    filter_backends: list = [DjangoFilterBackend]
+    filter_backends: list = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields: list[str] = ["province"]
     search_fields: list[str] = ["name"]

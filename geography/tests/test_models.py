@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.db.models.deletion import ProtectedError
 from django.test import TestCase
 
 from geography.models import Country, Province, Municipality
@@ -66,5 +67,5 @@ class MunicipalityModelTests(TestCase):
         self.assertEqual(self.municipality.province, self.province)
 
     def test_province_protect_on_delete(self) -> None:
-        with self.assertRaises(Exception):
+        with self.assertRaises(ProtectedError):
             self.province.delete()

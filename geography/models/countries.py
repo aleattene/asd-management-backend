@@ -8,8 +8,6 @@ class Country(models.Model):
     iso_code = models.CharField(
         max_length=3,
         unique=True,
-        blank=True,
-        default="",
         verbose_name="Codice ISO",
     )
     is_active = models.BooleanField(default=True, verbose_name="Attivo")
