@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from athletes.models import Athlete, Category
-from doctors.models import SportDoctor
 from enrollments.models import Enrollment
 from staff.models import Trainer
 from users.models import CustomUser, UserRole
