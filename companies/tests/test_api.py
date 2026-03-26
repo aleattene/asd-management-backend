@@ -116,6 +116,26 @@ class CompanyAPITests(TestCase):
         self.company.refresh_from_db()
         self.assertFalse(self.company.is_active)
 
+    # --- NULLABLE FIELD NORMALIZATION ---
+
+    def test_empty_vat_number_normalized_to_null(self) -> None:
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.post(
+            "/api/v1/companies/",
+            {"business_name": "Privato Senza P.IVA", "vat_number": ""},
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIsNone(response.data["vat_number"])
+
+    def test_empty_fiscal_code_normalized_to_null(self) -> None:
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.post(
+            "/api/v1/companies/",
+            {"business_name": "Ditta Estera Senza CF", "fiscal_code": ""},
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIsNone(response.data["fiscal_code"])
+
     def test_deactivated_company_not_in_list(self) -> None:
         self.company.is_active = False
         self.company.save(update_fields=["is_active"])
