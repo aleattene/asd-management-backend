@@ -159,7 +159,32 @@ class Command(BaseCommand):
         created: int = 0
         skipped: int = 0
 
-        # Build province lookup map
+        if dry_run:
+            # In dry-run mode build the province map from CSV (no DB required)
+            province_rows: list[dict[str, str]] = self._read_csv("provinces.csv")
+            province_codes: set[str] = {
+                r.get("code", "").strip()
+                for r in province_rows
+                if r.get("code", "").strip()
+            }
+            missing_codes: set[str] = set()
+            for row in rows:
+                name: str = row.get("name", "").strip()
+                province_code: str = row.get("province_code", "").strip()
+                if not name or not province_code or province_code not in province_codes:
+                    skipped += 1
+                    if province_code and province_code not in province_codes:
+                        missing_codes.add(province_code)
+            if missing_codes:
+                self.stdout.write(
+                    self.style.WARNING(
+                        f"Unknown province codes in CSV: {sorted(missing_codes)}"
+                    )
+                )
+            self._report("Municipalities", len(rows) - skipped, 0, skipped, dry_run=True)
+            return True
+
+        # Build province lookup map from DB for real import
         province_map: dict[str, Province] = {
             p.code: p for p in Province.objects.all()
         }
@@ -171,25 +196,6 @@ class Command(BaseCommand):
                 )
             )
             return False
-
-        if dry_run:
-            # Validate rows counting skipped rows (not unique codes)
-            missing_codes: set[str] = set()
-            for row in rows:
-                name: str = row.get("name", "").strip()
-                province_code: str = row.get("province_code", "").strip()
-                if not name or not province_code or province_code not in province_map:
-                    skipped += 1
-                    if province_code and province_code not in province_map:
-                        missing_codes.add(province_code)
-            if missing_codes:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f"Unknown province codes in CSV: {sorted(missing_codes)}"
-                    )
-                )
-            self._report("Municipalities", len(rows) - skipped, 0, skipped, dry_run=True)
-            return True
 
         with transaction.atomic():
             for row in rows:

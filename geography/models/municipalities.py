@@ -16,6 +16,12 @@ class Municipality(models.Model):
         verbose_name = "Comune"
         verbose_name_plural = "Comuni"
         ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "province"],
+                name="unique_municipality_per_province",
+            )
+        ]
 
     def __str__(self) -> str:
         return f"{self.name} ({self.province.code})"

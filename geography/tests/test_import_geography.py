@@ -144,6 +144,21 @@ class ImportEdgeCaseTests(TestCase):
     @patch(PATCH_TARGET, TEST_DATA_DIR)
     def test_municipalities_without_provinces_returns_error_message(self) -> None:
         from io import StringIO
-        stderr = StringIO()
-        call_command("import_geography", "--municipalities", stderr=stderr)
+        stdout = StringIO()
+        call_command("import_geography", "--municipalities", stdout=stdout)
+        self.assertEqual(Municipality.objects.count(), 0)
+        self.assertIn("No provinces in DB", stdout.getvalue())
+
+    @patch(PATCH_TARGET, TEST_DATA_DIR)
+    def test_dry_run_all_does_not_require_db_provinces(self) -> None:
+        """--dry-run with default/all flags must not fail due to missing DB provinces."""
+        call_command("import_geography", "--dry-run")
+        self.assertEqual(Country.objects.count(), 0)
+        self.assertEqual(Province.objects.count(), 0)
+        self.assertEqual(Municipality.objects.count(), 0)
+
+    @patch(PATCH_TARGET, TEST_DATA_DIR)
+    def test_dry_run_municipalities_standalone(self) -> None:
+        """--municipalities --dry-run must work without provinces in DB."""
+        call_command("import_geography", "--municipalities", "--dry-run")
         self.assertEqual(Municipality.objects.count(), 0)
