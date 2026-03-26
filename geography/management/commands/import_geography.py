@@ -157,7 +157,6 @@ class Command(BaseCommand):
         """Import municipalities from municipalities.csv. Returns True on success."""
         rows: list[dict[str, str]] = self._read_csv("municipalities.csv")
         created: int = 0
-        updated: int = 0
         skipped: int = 0
 
         if dry_run:
@@ -215,17 +214,14 @@ class Command(BaseCommand):
                         name,
                     )
                     continue
-                _, was_created = Municipality.objects.update_or_create(
+                _, was_created = Municipality.objects.get_or_create(
                     name=name,
                     province=province,
-                    defaults={},
                 )
                 if was_created:
                     created += 1
-                else:
-                    updated += 1
 
-        self._report("Municipalities", created, updated, skipped)
+        self._report("Municipalities", created, 0, skipped)
         return True
 
     def _report(
