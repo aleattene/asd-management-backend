@@ -10,6 +10,7 @@ class UserRole(models.TextChoices):
     OPERATOR = "operator", "Operatore Amministrativo"
     TRAINER = "trainer", "Allenatore"
     MEMBER = "member", "Membro"
+    EXTERNAL = "external", "Collaboratore Esterno"
 
 
 class CustomUserManager(BaseUserManager):

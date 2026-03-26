@@ -16,6 +16,8 @@ class AthletePermission(permissions.BasePermission):
     def has_permission(self, request: Request, view) -> bool:
         if not request.user or not request.user.is_authenticated:
             return False
+        if request.user.role == "external":
+            return False
         if request.method in permissions.SAFE_METHODS:
             return True
         return request.user.role in ("admin", "superadmin", "operator")

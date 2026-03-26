@@ -1,10 +1,9 @@
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from config.permissions import IsAdminOrOperator, IsSuperAdmin
+from config.permissions import IsAdminOrOperator, IsAuthenticatedNonExternal, IsSuperAdmin
 from users.models import CustomUser
 from .serializers import (
     UserListSerializer,
@@ -53,7 +52,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data)
 
-    @action(detail=False, methods=["get", "patch"], permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["get", "patch"], permission_classes=[IsAuthenticatedNonExternal])
     def me(self, request: Request) -> Response:
         """View or update the authenticated user's own profile."""
         if request.method == "GET":
