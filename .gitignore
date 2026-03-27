@@ -165,8 +165,8 @@ CLAUDE.md
 TODO.md
 
 # Internal documentation — not for public repositories
-docs/legacy_schema.sql
 docs/PROJECT_SPEC.md
+docs/pre-production.md
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

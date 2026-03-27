@@ -126,22 +126,63 @@ http://localhost:8000/api/schema/
 
 ### Main endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/token/` | Obtain JWT token pair |
-| POST | `/api/v1/auth/token/refresh/` | Refresh access token |
-| GET/PATCH | `/api/v1/users/me/` | Own profile |
-| GET/POST | `/api/v1/users/` | List/create users (admin/operator) |
-| PATCH | `/api/v1/users/{id}/set_role/` | Change user role (superadmin only) |
-| GET/POST | `/api/v1/athletes/` | List/create athletes |
-| GET/POST | `/api/v1/categories/` | List/create categories |
-| GET/POST | `/api/v1/trainers/` | List/create trainers |
-| GET/POST | `/api/v1/doctors/` | List/create sport doctors |
-| GET/POST | `/api/v1/enrollments/` | List/create season enrollments |
-| GET/POST | `/api/v1/certificates/` | List/create sport medical certificates |
-| GET/POST | `/api/v1/countries/` | List/create countries (write: admin/operator; read-only: any authenticated user) |
-| GET/POST | `/api/v1/provinces/` | List/create Italian provinces (write: admin/operator; read-only: any authenticated user) |
-| GET/POST | `/api/v1/municipalities/` | List/create municipalities, filter by `?province=<id>` (write: admin/operator; read-only: any authenticated user) |
+Full interactive documentation is available at `http://localhost:8000/api/schema/swagger-ui/`.
+
+#### Auth
+| Method | Endpoint | Description | Permission |
+|--------|----------|-------------|------------|
+| POST | `/api/v1/auth/token/` | Obtain JWT token pair | Public |
+| POST | `/api/v1/auth/token/refresh/` | Refresh access token | Public |
+
+#### Users
+| Method | Endpoint | Description | Permission |
+|--------|----------|-------------|------------|
+| GET/PATCH | `/api/v1/users/me/` | Own profile | Authenticated (non-external) |
+| GET/POST | `/api/v1/users/` | List/create users | Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/users/{id}/` | User detail | Admin/Operator |
+| PATCH | `/api/v1/users/{id}/set_role/` | Change user role | Superadmin only |
+
+#### Registry
+| Method | Endpoint | Description | Permission |
+|--------|----------|-------------|------------|
+| GET/POST | `/api/v1/athletes/` | List/create athletes | Read: authenticated; Write: Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/athletes/{id}/` | Athlete detail | Read: authenticated; Write: Admin/Operator |
+| GET/POST | `/api/v1/categories/` | List/create categories | Read: authenticated; Write: Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/categories/{id}/` | Category detail | Read: authenticated; Write: Admin/Operator |
+| GET/POST | `/api/v1/trainers/` | List/create trainers | Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/trainers/{id}/` | Trainer detail | Admin/Operator |
+| GET/POST | `/api/v1/doctors/` | List/create sport doctors | Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/doctors/{id}/` | Doctor detail | Admin/Operator |
+
+#### Enrollments & Certificates
+| Method | Endpoint | Description | Permission |
+|--------|----------|-------------|------------|
+| GET/POST | `/api/v1/enrollments/` | List/create season enrollments | Read: authenticated; Write: Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/enrollments/{id}/` | Enrollment detail | Read: authenticated; Write: Admin/Operator |
+| GET/POST | `/api/v1/certificates/` | List/create sport medical certificates | Read: authenticated; Write: Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/certificates/{id}/` | Certificate detail | Read: authenticated; Write: Admin/Operator |
+
+#### Geography (lookup data)
+| Method | Endpoint | Description | Permission |
+|--------|----------|-------------|------------|
+| GET/POST | `/api/v1/countries/` | List/create countries | Read: authenticated; Write: Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/countries/{id}/` | Country detail | Read: authenticated; Write: Admin/Operator |
+| GET/POST | `/api/v1/provinces/` | List/create Italian provinces | Read: authenticated; Write: Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/provinces/{id}/` | Province detail | Read: authenticated; Write: Admin/Operator |
+| GET/POST | `/api/v1/municipalities/` | List/create municipalities (`?province=<id>`) | Read: authenticated; Write: Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/municipalities/{id}/` | Municipality detail | Read: authenticated; Write: Admin/Operator |
+
+#### Finance
+| Method | Endpoint | Description | Permission |
+|--------|----------|-------------|------------|
+| GET/POST | `/api/v1/companies/` | List/create companies | Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/companies/{id}/` | Company detail | Admin/Operator |
+| GET/POST | `/api/v1/payment-methods/` | List/create payment methods | Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/payment-methods/{id}/` | Payment method detail | Admin/Operator |
+| GET/POST | `/api/v1/invoices/` | List/create invoices (`direction=purchase\|sale`) | Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/invoices/{id}/` | Invoice detail | Admin/Operator |
+| GET/POST | `/api/v1/receipts/` | List/create receipts | Admin/Operator |
+| GET/PATCH/DELETE | `/api/v1/receipts/{id}/` | Receipt detail | Admin/Operator |
 
 ---
 
@@ -174,6 +215,10 @@ doctors/                # Sport doctors (external professionals)
 enrollments/            # Season enrollments
 certificates/           # Sport medical certificates
 geography/              # Reference data: countries, provinces, municipalities
+companies/              # External companies (invoicing counterparts)
+payment_methods/        # Configurable payment methods
+invoices/               # Purchase and sale invoices
+receipts/               # Fiscal receipts (member payments + staff compensations)
 docs/                   # Additional project documentation
 ```
 
