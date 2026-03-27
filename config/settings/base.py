@@ -149,6 +149,8 @@ REST_FRAMEWORK: dict = {
 
 
 # SimpleJWT
+# Note: BLACKLIST_AFTER_ROTATION=True persists rows in OutstandingToken/BlacklistedToken tables.
+# Schedule `python manage.py flushexpiredtokens` periodically (e.g. nightly cron) to prevent unbounded growth.
 
 SIMPLE_JWT: dict = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),

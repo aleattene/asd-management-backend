@@ -126,8 +126,6 @@ http://localhost:8000/api/schema/
 
 ### Main endpoints
 
-Full interactive documentation is available at `http://localhost:8000/api/schema/swagger-ui/`.
-
 #### Auth
 | Method | Endpoint | Description | Permission |
 |--------|----------|-------------|------------|
