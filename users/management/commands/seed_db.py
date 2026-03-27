@@ -1,23 +1,11 @@
-import logging
+import os
 
-from django.core.management.base import BaseCommand
+from athletes.models import Category
+from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
+from payment_methods.models import PaymentMethod
 
-from factories import (
-    AthleteFactory,
-    CategoryFactory,
-    CompanyFactory,
-    EnrollmentFactory,
-    InvoiceFactory,
-    PaymentMethodFactory,
-    ReceiptFactory,
-    SportCertificateFactory,
-    SportDoctorFactory,
-    TrainerFactory,
-    UserFactory,
-)
 from users.models import CustomUser, UserRole
-
-logger = logging.getLogger(__name__)
 
 PAYMENT_METHOD_NAMES: list[str] = ["Bonifico Bancario", "Contanti", "POS", "Assegno"]
 
@@ -35,16 +23,60 @@ CATEGORIES: list[dict] = [
 class Command(BaseCommand):
     """Populate the database with realistic development data."""
 
-    help = "Seed the database with development data. Safe to re-run (idempotent)."
+    help = (
+        "Seed the database with development data. "
+        "For safe repeat runs, use --flush to clear existing data first."
+    )
 
     def add_arguments(self, parser) -> None:  # type: ignore[override]
         parser.add_argument(
             "--flush",
             action="store_true",
-            help="Delete all existing data before seeding (except superusers).",
+            help=(
+                "Delete all existing non-superuser data before seeding. "
+                "Required for safe repeat runs."
+            ),
         )
 
     def handle(self, *args, **options) -> None:
+        try:
+            from factories import (
+                AthleteFactory,
+                CategoryFactory,
+                CompanyFactory,
+                EnrollmentFactory,
+                InvoiceFactory,
+                PaymentMethodFactory,
+                ReceiptFactory,
+                SportCertificateFactory,
+                SportDoctorFactory,
+                TrainerFactory,
+                UserFactory,
+            )
+        except ImportError as exc:
+            raise CommandError(
+                "Dev dependencies are not installed. "
+                "Run: pip install -r requirements_dev.txt"
+            ) from exc
+
+        self.AthleteFactory = AthleteFactory
+        self.CategoryFactory = CategoryFactory
+        self.CompanyFactory = CompanyFactory
+        self.EnrollmentFactory = EnrollmentFactory
+        self.InvoiceFactory = InvoiceFactory
+        self.PaymentMethodFactory = PaymentMethodFactory
+        self.ReceiptFactory = ReceiptFactory
+        self.SportCertificateFactory = SportCertificateFactory
+        self.SportDoctorFactory = SportDoctorFactory
+        self.TrainerFactory = TrainerFactory
+        self.UserFactory = UserFactory
+
+        if not settings.DEBUG:
+            raise CommandError(
+                "seed_db is intended for development only and cannot run with DEBUG=False. "
+                "Set DEBUG=True or use the correct settings module."
+            )
+
         if options["flush"]:
             self._flush()
 
@@ -97,7 +129,7 @@ class Command(BaseCommand):
     def _seed_payment_methods(self) -> list:
         methods = []
         for name in PAYMENT_METHOD_NAMES:
-            pm, _ = PaymentMethodFactory._meta.model.objects.get_or_create(name=name)
+            pm, _ = PaymentMethod.objects.get_or_create(name=name)
             methods.append(pm)
         self.stdout.write(f"  Payment methods: {len(methods)}")
         return methods
@@ -105,7 +137,7 @@ class Command(BaseCommand):
     def _seed_categories(self) -> list:
         cats = []
         for data in CATEGORIES:
-            cat, _ = CategoryFactory._meta.model.objects.get_or_create(
+            cat, _ = Category.objects.get_or_create(
                 code=data["code"],
                 defaults={"description": data["description"], "age_range": data["age_range"]},
             )
@@ -123,41 +155,57 @@ class Command(BaseCommand):
         ]
         created: dict = {}
         for cfg in roles:
-            users = [UserFactory(role=cfg["role"]) for _ in range(cfg["count"])]
+            users = [self.UserFactory(role=cfg["role"]) for _ in range(cfg["count"])]
             created[cfg["key"]] = users
             self.stdout.write(f"  Users ({cfg['role']}): {len(users)}")
 
         # Ensure one known superadmin for FE login
-        if not CustomUser.objects.filter(username="superadmin").exists():
-            CustomUser.objects.create_superuser(
-                username="superadmin",
-                email="superadmin@asd.local",
-                password="Superadmin123!",
+        superadmin_username: str | None = os.environ.get("SEED_SUPERADMIN_USERNAME")
+        superadmin_email: str | None = os.environ.get("SEED_SUPERADMIN_EMAIL")
+        superadmin_password: str | None = os.environ.get("SEED_SUPERADMIN_PASSWORD")
+        if not all([superadmin_username, superadmin_email, superadmin_password]):
+            raise CommandError(
+                "SEED_SUPERADMIN_USERNAME, SEED_SUPERADMIN_EMAIL and "
+                "SEED_SUPERADMIN_PASSWORD environment variables are required."
             )
-            self.stdout.write("  Superadmin created (username: superadmin)")
+        if not CustomUser.objects.filter(username=superadmin_username).exists():
+            CustomUser.objects.create_superuser(
+                username=superadmin_username,
+                email=superadmin_email,
+                password=superadmin_password,
+            )
+            self.stdout.write(f"  Superadmin created (username: {superadmin_username})")
 
         # Known admin for FE login
-        if not CustomUser.objects.filter(username="admin").exists():
-            UserFactory(
-                username="admin",
-                email="admin@asd.local",
+        admin_username: str | None = os.environ.get("SEED_ADMIN_USERNAME")
+        admin_email: str | None = os.environ.get("SEED_ADMIN_EMAIL")
+        admin_password: str | None = os.environ.get("SEED_ADMIN_PASSWORD")
+        if not all([admin_username, admin_email, admin_password]):
+            raise CommandError(
+                "SEED_ADMIN_USERNAME, SEED_ADMIN_EMAIL and "
+                "SEED_ADMIN_PASSWORD environment variables are required."
+            )
+        if not CustomUser.objects.filter(username=admin_username).exists():
+            self.UserFactory(
+                username=admin_username,
+                email=admin_email,
                 password=None,
                 role=UserRole.ADMIN,
             )
-            user = CustomUser.objects.get(username="admin")
-            user.set_password("Admin123!")
+            user = CustomUser.objects.get(username=admin_username)
+            user.set_password(admin_password)
             user.save()
-            self.stdout.write("  Admin created (username: admin)")
+            self.stdout.write(f"  Admin created (username: {admin_username})")
 
         return created
 
     def _seed_trainers(self, trainer_users: list) -> list:
-        trainers = [TrainerFactory(user=u) for u in trainer_users]
+        trainers = [self.TrainerFactory(user=u) for u in trainer_users]
         self.stdout.write(f"  Trainers: {len(trainers)}")
         return trainers
 
     def _seed_doctors(self) -> list:
-        doctors = [SportDoctorFactory() for _ in range(3)]
+        doctors = [self.SportDoctorFactory() for _ in range(3)]
         self.stdout.write(f"  Sport doctors: {len(doctors)}")
         return doctors
 
@@ -166,13 +214,13 @@ class Command(BaseCommand):
         for i, guardian in enumerate(guardians):
             category = categories[i % len(categories)]
             trainer = trainers[i % len(trainers)]
-            athlete = AthleteFactory(
+            athlete = self.AthleteFactory(
                 guardian=guardian, category=category, trainer=trainer
             )
             athletes.append(athlete)
         # Add a few more athletes without trainer
         for i in range(5):
-            athlete = AthleteFactory(
+            athlete = self.AthleteFactory(
                 guardian=guardians[i % len(guardians)],
                 category=categories[i % len(categories)],
                 trainer=None,
@@ -184,7 +232,7 @@ class Command(BaseCommand):
     def _seed_enrollments(self, athletes: list) -> None:
         count = 0
         for athlete in athletes:
-            EnrollmentFactory(athlete=athlete, season="2025/2026")
+            self.EnrollmentFactory(athlete=athlete, season="2025/2026")
             count += 1
         self.stdout.write(f"  Enrollments: {count}")
 
@@ -192,19 +240,19 @@ class Command(BaseCommand):
         count = 0
         for i, athlete in enumerate(athletes[:15]):
             doctor = doctors[i % len(doctors)]
-            SportCertificateFactory(athlete=athlete, doctor=doctor)
+            self.SportCertificateFactory(athlete=athlete, doctor=doctor)
             count += 1
         self.stdout.write(f"  Certificates: {count}")
 
     def _seed_companies(self) -> list:
-        companies = [CompanyFactory() for _ in range(10)]
+        companies = [self.CompanyFactory() for _ in range(10)]
         self.stdout.write(f"  Companies: {len(companies)}")
         return companies
 
     def _seed_invoices(self, companies: list, payment_methods: list) -> None:
         count = 0
         for i in range(20):
-            InvoiceFactory(
+            self.InvoiceFactory(
                 company=companies[i % len(companies)],
                 payment_method=payment_methods[i % len(payment_methods)],
             )
@@ -214,7 +262,7 @@ class Command(BaseCommand):
     def _seed_receipts(self, users: list, payment_methods: list) -> None:
         count = 0
         for i in range(15):
-            ReceiptFactory(
+            self.ReceiptFactory(
                 user=users[i % len(users)],
                 payment_method=payment_methods[i % len(payment_methods)],
             )

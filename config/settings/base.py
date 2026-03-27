@@ -20,7 +20,7 @@ if os.path.exists(env_file_path):
     environ.Env.read_env(env_file_path)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY: str = os.getenv("SECRET_KEY", "change-me-in-production")
+SECRET_KEY: str = os.environ["SECRET_KEY"]
 
 ALLOWED_HOSTS: list[str] = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
