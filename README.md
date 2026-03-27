@@ -184,7 +184,19 @@ http://localhost:8000/api/schema/
 
 ## Development data
 
-To populate the local database with realistic seed data (users, athletes, enrollments, invoices, etc.):
+To populate the local database with realistic seed data (users, athletes, enrollments, invoices, etc.),
+the following environment variables must be set in your `.env` file (see `.env.example`):
+
+```bash
+SEED_SUPERADMIN_USERNAME=
+SEED_SUPERADMIN_EMAIL=
+SEED_SUPERADMIN_PASSWORD=
+SEED_ADMIN_USERNAME=
+SEED_ADMIN_EMAIL=
+SEED_ADMIN_PASSWORD=
+```
+
+Requires `DEBUG=True` and dev dependencies installed (`pip install -r requirements_dev.txt`).
 
 ```bash
 python manage.py seed_db

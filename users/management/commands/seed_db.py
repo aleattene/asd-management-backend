@@ -127,9 +127,10 @@ class Command(BaseCommand):
             )
 
     def _flush(self) -> None:
-        """Delete seeded data: users (non-superusers), athletes, enrollments,
+        """Delete seeded data: all non-superuser users, athletes, enrollments,
         certificates, trainers, doctors, companies, payment methods, invoices,
-        and receipts. Geography data and auth tables are preserved."""
+        and receipts. Superusers, geography data, and auth groups/permissions
+        are preserved."""
         from athletes.models import Athlete, Category
         from certificates.models import SportCertificate
         from companies.models import Company
@@ -200,14 +201,9 @@ class Command(BaseCommand):
             self.stdout.write(f"  Superadmin created (username: {superadmin_username})")
 
         # Ensure one known admin
-        admin_username: str | None = os.environ.get("SEED_ADMIN_USERNAME")
-        admin_email: str | None = os.environ.get("SEED_ADMIN_EMAIL")
-        admin_password: str | None = os.environ.get("SEED_ADMIN_PASSWORD")
-        if not all([admin_username, admin_email, admin_password]):
-            raise CommandError(
-                "SEED_ADMIN_USERNAME, SEED_ADMIN_EMAIL and "
-                "SEED_ADMIN_PASSWORD environment variables are required."
-            )
+        admin_username: str = os.environ["SEED_ADMIN_USERNAME"]
+        admin_email: str = os.environ["SEED_ADMIN_EMAIL"]
+        admin_password: str = os.environ["SEED_ADMIN_PASSWORD"]
         if not CustomUser.objects.filter(username=admin_username).exists():
             self.UserFactory(
                 username=admin_username,
