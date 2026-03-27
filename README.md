@@ -179,7 +179,7 @@ Full interactive documentation is available at `http://localhost:8000/api/schema
 | GET/PATCH/DELETE | `/api/v1/companies/{id}/` | Company detail | Admin/Operator |
 | GET/POST | `/api/v1/payment-methods/` | List/create payment methods | Admin/Operator |
 | GET/PATCH/DELETE | `/api/v1/payment-methods/{id}/` | Payment method detail | Admin/Operator |
-| GET/POST | `/api/v1/invoices/` | List/create invoices (`direction=purchase\|sale`) | Admin/Operator |
+| GET/POST | `/api/v1/invoices/` | List/create invoices (`direction=purchase` or `direction=sale`) | Admin/Operator |
 | GET/PATCH/DELETE | `/api/v1/invoices/{id}/` | Invoice detail | Admin/Operator |
 | GET/POST | `/api/v1/receipts/` | List/create receipts | Admin/Operator |
 | GET/PATCH/DELETE | `/api/v1/receipts/{id}/` | Receipt detail | Admin/Operator |
