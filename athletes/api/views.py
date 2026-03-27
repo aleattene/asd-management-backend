@@ -10,7 +10,7 @@ from .serializers import AthleteListSerializer, AthleteDetailSerializer, Categor
 class AthletePermission(permissions.BasePermission):
     """
     - external: no access
-    - admin/operator: full CRUD
+    - admin/operator/superadmin: full CRUD
     - trainer/member: read-only (filtered queryset handles scoping)
     """
 

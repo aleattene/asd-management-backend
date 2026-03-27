@@ -52,9 +52,7 @@ class IsAdminOrOperatorOrReadOnly(permissions.BasePermission):
     """Allows read-only access to authenticated non-external users, write access to admin/operator/superadmin."""
 
     def has_permission(self, request: Request, view: APIView) -> bool:
-        if not request.user or not request.user.is_authenticated:
-            return False
-        if request.user.role == "external":
+        if not IsAuthenticatedNonExternal().has_permission(request, view):
             return False
         if request.method in permissions.SAFE_METHODS:
             return True

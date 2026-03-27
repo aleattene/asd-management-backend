@@ -18,7 +18,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     CRUD API for user management.
 
-    - list/create/update/delete: admin and operator only
+    - list/create/update/delete: admin, operator, and superadmin only (via IsAdminOrOperator)
     - me: any authenticated non-external user can view/update their own profile
     """
 
