@@ -145,44 +145,44 @@ Full interactive documentation is available at `http://localhost:8000/api/schema
 #### Registry
 | Method | Endpoint | Description | Permission |
 |--------|----------|-------------|------------|
-| GET/POST | `/api/v1/athletes/` | List/create athletes | Read: authenticated; Write: Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/athletes/{id}/` | Athlete detail | Read: authenticated; Write: Admin/Operator |
-| GET/POST | `/api/v1/categories/` | List/create categories | Read: authenticated; Write: Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/categories/{id}/` | Category detail | Read: authenticated; Write: Admin/Operator |
-| GET/POST | `/api/v1/trainers/` | List/create trainers | Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/trainers/{id}/` | Trainer detail | Admin/Operator |
-| GET/POST | `/api/v1/doctors/` | List/create sport doctors | Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/doctors/{id}/` | Doctor detail | Admin/Operator |
+| GET/POST | `/api/v1/athletes/` | List/create athletes | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/athletes/{id}/` | Athlete detail | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/categories/` | List/create categories | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/categories/{id}/` | Category detail | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/trainers/` | List/create trainers | Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/trainers/{id}/` | Trainer detail | Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/doctors/` | List/create sport doctors | Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/doctors/{id}/` | Doctor detail | Admin/Operator/Superadmin |
 
 #### Enrollments & Certificates
 | Method | Endpoint | Description | Permission |
 |--------|----------|-------------|------------|
-| GET/POST | `/api/v1/enrollments/` | List/create season enrollments | Read: authenticated; Write: Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/enrollments/{id}/` | Enrollment detail | Read: authenticated; Write: Admin/Operator |
-| GET/POST | `/api/v1/certificates/` | List/create sport medical certificates | Read: authenticated; Write: Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/certificates/{id}/` | Certificate detail | Read: authenticated; Write: Admin/Operator |
+| GET/POST | `/api/v1/enrollments/` | List/create season enrollments | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/enrollments/{id}/` | Enrollment detail | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/certificates/` | List/create sport medical certificates | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/certificates/{id}/` | Certificate detail | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
 
 #### Geography (lookup data)
 | Method | Endpoint | Description | Permission |
 |--------|----------|-------------|------------|
-| GET/POST | `/api/v1/countries/` | List/create countries | Read: authenticated; Write: Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/countries/{id}/` | Country detail | Read: authenticated; Write: Admin/Operator |
-| GET/POST | `/api/v1/provinces/` | List/create Italian provinces | Read: authenticated; Write: Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/provinces/{id}/` | Province detail | Read: authenticated; Write: Admin/Operator |
-| GET/POST | `/api/v1/municipalities/` | List/create municipalities (`?province=<id>`) | Read: authenticated; Write: Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/municipalities/{id}/` | Municipality detail | Read: authenticated; Write: Admin/Operator |
+| GET/POST | `/api/v1/countries/` | List/create countries | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/countries/{id}/` | Country detail | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/provinces/` | List/create Italian provinces | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/provinces/{id}/` | Province detail | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/municipalities/` | List/create municipalities (`?province=<id>`) | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/municipalities/{id}/` | Municipality detail | Read: authenticated (non-external); Write: Admin/Operator/Superadmin |
 
 #### Finance
 | Method | Endpoint | Description | Permission |
 |--------|----------|-------------|------------|
-| GET/POST | `/api/v1/companies/` | List/create companies | Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/companies/{id}/` | Company detail | Admin/Operator |
-| GET/POST | `/api/v1/payment-methods/` | List/create payment methods | Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/payment-methods/{id}/` | Payment method detail | Admin/Operator |
-| GET/POST | `/api/v1/invoices/` | List/create invoices (`direction=purchase` or `direction=sale`) | Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/invoices/{id}/` | Invoice detail | Admin/Operator |
-| GET/POST | `/api/v1/receipts/` | List/create receipts | Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/receipts/{id}/` | Receipt detail | Admin/Operator |
+| GET/POST | `/api/v1/companies/` | List/create companies | Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/companies/{id}/` | Company detail | Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/payment-methods/` | List/create payment methods | Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/payment-methods/{id}/` | Payment method detail | Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/invoices/` | List/create invoices (`direction=purchase` or `direction=sale`) | Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/invoices/{id}/` | Invoice detail | Admin/Operator/Superadmin |
+| GET/POST | `/api/v1/receipts/` | List/create receipts | Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/receipts/{id}/` | Receipt detail | Admin/Operator/Superadmin |
 
 ---
 

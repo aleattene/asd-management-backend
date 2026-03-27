@@ -43,5 +43,5 @@ if TRUST_PROXY_SSL_HEADER:
 # Enable preload only after confirming the entire domain surface is HTTPS-ready.
 # WARNING: SECURE_HSTS_PRELOAD=true submits the domain to browser preload lists — hard to reverse.
 SECURE_HSTS_SECONDS: int = environ.Env().int("SECURE_HSTS_SECONDS", default=31536000)
-SECURE_HSTS_INCLUDE_SUBDOMAINS: bool = os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "true").lower() in ("true", "1", "yes")
+SECURE_HSTS_INCLUDE_SUBDOMAINS: bool = os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "false").lower() in ("true", "1", "yes")
 SECURE_HSTS_PRELOAD: bool = os.getenv("SECURE_HSTS_PRELOAD", "false").lower() in ("true", "1", "yes")
