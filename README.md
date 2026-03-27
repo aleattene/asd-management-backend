@@ -184,6 +184,22 @@ http://localhost:8000/api/schema/
 
 ---
 
+## Development data
+
+To populate the local database with realistic seed data (users, athletes, enrollments, invoices, etc.):
+
+```bash
+python manage.py seed_db
+```
+
+To reset and re-seed from scratch (preserves existing superusers):
+
+```bash
+python manage.py seed_db --flush
+```
+
+---
+
 ## Running tests
 
 ```bash
