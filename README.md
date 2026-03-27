@@ -138,8 +138,8 @@ Full interactive documentation is available at `http://localhost:8000/api/schema
 | Method | Endpoint | Description | Permission |
 |--------|----------|-------------|------------|
 | GET/PATCH | `/api/v1/users/me/` | Own profile | Authenticated (non-external) |
-| GET/POST | `/api/v1/users/` | List/create users | Admin/Operator |
-| GET/PATCH/DELETE | `/api/v1/users/{id}/` | User detail | Admin/Operator |
+| GET/POST | `/api/v1/users/` | List/create users | Admin/Operator/Superadmin |
+| GET/PATCH/DELETE | `/api/v1/users/{id}/` | User detail | Admin/Operator/Superadmin |
 | PATCH | `/api/v1/users/{id}/set_role/` | Change user role | Superadmin only |
 
 #### Registry

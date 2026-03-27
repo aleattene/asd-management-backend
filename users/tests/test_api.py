@@ -51,6 +51,8 @@ class JWTAuthTests(TestCase):
             "/api/v1/auth/token/",
             {"username": "testuser", "password": "testpass123"},
         )
+        self.assertEqual(token_response.status_code, status.HTTP_200_OK)
+        self.assertIn("refresh", token_response.data)
         old_refresh: str = token_response.data["refresh"]
         response = self.client.post(
             "/api/v1/auth/token/refresh/",
@@ -66,12 +68,17 @@ class JWTAuthTests(TestCase):
             "/api/v1/auth/token/",
             {"username": "testuser", "password": "testpass123"},
         )
+        self.assertEqual(token_response.status_code, status.HTTP_200_OK)
+        self.assertIn("refresh", token_response.data)
         old_refresh: str = token_response.data["refresh"]
         # Use the refresh token once — it gets rotated and blacklisted
-        self.client.post(
+        first_refresh = self.client.post(
             "/api/v1/auth/token/refresh/",
             {"refresh": old_refresh},
         )
+        self.assertEqual(first_refresh.status_code, status.HTTP_200_OK)
+        self.assertIn("refresh", first_refresh.data)
+        self.assertNotEqual(first_refresh.data["refresh"], old_refresh)
         # Attempt to reuse the old refresh token — should fail
         response = self.client.post(
             "/api/v1/auth/token/refresh/",
