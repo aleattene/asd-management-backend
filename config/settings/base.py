@@ -41,6 +41,8 @@ INSTALLED_APPS: list[str] = [
     "django_filters",
     "django_extensions",
     "drf_spectacular",
+    # Third-party (token blacklist — requires migration)
+    "rest_framework_simplejwt.token_blacklist",
     # Project apps
     "users",
     "athletes",
@@ -150,7 +152,7 @@ SIMPLE_JWT: dict = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": False,
+    "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
