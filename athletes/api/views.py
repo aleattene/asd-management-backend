@@ -1,24 +1,10 @@
-from rest_framework import permissions, viewsets, status
+from rest_framework import viewsets, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from config.permissions import IsAdminOrOperatorOrReadOnly
 from athletes.models import Athlete, Category
 from .serializers import AthleteListSerializer, AthleteDetailSerializer, CategorySerializer
-
-
-class AthletePermission(permissions.BasePermission):
-    """
-    - admin/operator: full CRUD
-    - trainer/member: read-only (filtered queryset handles scoping)
-    """
-
-    def has_permission(self, request: Request, view) -> bool:
-        if not request.user or not request.user.is_authenticated:
-            return False
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user.role in ("admin", "superadmin", "operator")
 
 
 class AthleteViewSet(viewsets.ModelViewSet):
@@ -30,7 +16,7 @@ class AthleteViewSet(viewsets.ModelViewSet):
     - member: read-only access to own guardian athletes
     """
 
-    permission_classes: list = [AthletePermission]
+    permission_classes: list = [IsAdminOrOperatorOrReadOnly]
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
