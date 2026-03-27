@@ -34,7 +34,7 @@ SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "true").lower() in ("true
 # HSTS — env-driven to allow safe staging/first deploys.
 # Enable preload only after confirming the entire domain surface is HTTPS-ready.
 # WARNING: SECURE_HSTS_PRELOAD=true submits the domain to browser preload lists — hard to reverse.
-SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "31536000"))
+SECURE_HSTS_SECONDS = environ.Env().int("SECURE_HSTS_SECONDS", default=31536000)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "true").lower() in ("true", "1", "yes")
 SECURE_HSTS_PRELOAD = os.getenv("SECURE_HSTS_PRELOAD", "false").lower() in ("true", "1", "yes")
 

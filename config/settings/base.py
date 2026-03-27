@@ -41,7 +41,9 @@ INSTALLED_APPS: list[str] = [
     "django_filters",
     "django_extensions",
     "drf_spectacular",
-    # Third-party (token blacklist — requires migration)
+    # Third-party (token blacklist)
+    # NOTE: this app creates new DB tables — run `python manage.py migrate`
+    # in all environments (production, staging, CI) after adding or upgrading simplejwt.
     "rest_framework_simplejwt.token_blacklist",
     # Project apps
     "users",
