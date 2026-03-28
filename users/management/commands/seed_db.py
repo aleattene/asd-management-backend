@@ -194,26 +194,29 @@ class Command(BaseCommand):
         superadmin_username: str = os.environ["SEED_SUPERADMIN_USERNAME"]
         superadmin_email: str = os.environ["SEED_SUPERADMIN_EMAIL"]
         superadmin_password: str = os.environ["SEED_SUPERADMIN_PASSWORD"]
-        if not CustomUser.objects.filter(username=superadmin_username).exists():
-            CustomUser.objects.create_superuser(
-                username=superadmin_username,
-                email=superadmin_email,
-                password=superadmin_password,
-            )
-            self.stdout.write(f"  Superadmin created (username: {superadmin_username})")
+        superadmin, _was_created = CustomUser.objects.update_or_create(
+            username=superadmin_username,
+            defaults={"email": superadmin_email, "is_superuser": True, "is_staff": True},
+        )
+        superadmin.set_password(superadmin_password)
+        superadmin.save()
+        self.stdout.write(
+            f"  Superadmin {'created' if _was_created else 'updated'} (username: {superadmin_username})"
+        )
 
         # Ensure one known admin
         admin_username: str = os.environ["SEED_ADMIN_USERNAME"]
         admin_email: str = os.environ["SEED_ADMIN_EMAIL"]
         admin_password: str = os.environ["SEED_ADMIN_PASSWORD"]
-        if not CustomUser.objects.filter(username=admin_username).exists():
-            CustomUser.objects.create_user(
-                username=admin_username,
-                email=admin_email,
-                password=admin_password,
-                role=UserRole.ADMIN,
-            )
-            self.stdout.write(f"  Admin created (username: {admin_username})")
+        admin, _was_created = CustomUser.objects.update_or_create(
+            username=admin_username,
+            defaults={"email": admin_email, "role": UserRole.ADMIN},
+        )
+        admin.set_password(admin_password)
+        admin.save()
+        self.stdout.write(
+            f"  Admin {'created' if _was_created else 'updated'} (username: {admin_username})"
+        )
 
         return created
 
