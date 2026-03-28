@@ -84,6 +84,11 @@ class Command(BaseCommand):
         with transaction.atomic():
             if options["flush"]:
                 self._flush()
+            elif CustomUser.objects.filter(is_superuser=False).exists():
+                raise CommandError(
+                    "Database already contains seeded data. "
+                    "Use --flush to clear existing data before re-seeding."
+                )
 
             self.stdout.write("Seeding database...")
 
