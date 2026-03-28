@@ -196,7 +196,12 @@ class Command(BaseCommand):
         superadmin_password: str = os.environ["SEED_SUPERADMIN_PASSWORD"]
         superadmin, _was_created = CustomUser.objects.update_or_create(
             username=superadmin_username,
-            defaults={"email": superadmin_email, "is_superuser": True, "is_staff": True},
+            defaults={
+                "email": superadmin_email,
+                "role": UserRole.SUPERADMIN,
+                "is_superuser": True,
+                "is_staff": True,
+            },
         )
         superadmin.set_password(superadmin_password)
         superadmin.save()
